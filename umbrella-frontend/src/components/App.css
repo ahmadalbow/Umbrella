@@ -1,0 +1,30 @@
+body {
+  background-color: #f2f2f2;
+}
+.App {
+  height: 100vh;
+}
+nav {
+  height: 64px;
+  padding: 1.5rem;
+}
+.logo {
+  height: 40px;
+}
+
+.nav-links-container {
+  position: absolute;
+  transform: translateX(-50%);
+  left: 50%;
+}
+
+.nav-link {
+  color: #484848;
+}
+.nav-link.active {
+  color: black;
+  background-color: white;
+  border-radius: 20px;
+  width: 100px;
+  box-shadow: rgba(200, 200, 200, 0.5) 5px 5px 10px;
+}
