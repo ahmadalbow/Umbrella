@@ -18,17 +18,24 @@
     object-fit: cover;
     cursor: pointer;
     transition: all 0.3s;
-    opacity: 25%;
 }
 .dashboard-item img:hover{
     width: 180%;
     height: 180%;
-    opacity: 15%;
+}
+.dashboard-item img:hover + .dark-background{
+    width: 180%;
+    height: 180%;
+    opacity: 85%;
 }
 .dark-background{
+    background-color: black;
     height: 120%;
     width: 120%;
     margin-left: -15px;
+    opacity: 70%;
+    transition: all 0.3s;
+
 }
 .dashboard-item-name{
     color: white;
@@ -39,4 +46,6 @@
     left: 50%;
     transform: translate(-50%,-50%);
     text-wrap: nowrap;
+    
+
 }

@@ -7,6 +7,16 @@ import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 function App() {
   const [count, setCount] = useState(0);
 
+  TweenMax.staggerFrom(
+    ".dashboard-item",
+    1,
+    {
+      opacity: 0,
+      x: -20,
+      ease: Power3.easeOut,
+    },
+    0.08
+  );
   return (
     <Router>
       <div className="App">
