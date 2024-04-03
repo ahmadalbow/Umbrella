@@ -1,0 +1,42 @@
+.infrasolid-logo{
+    width: 700px;
+}
+.dashboard-item{
+    width: 350px;
+    height: 240px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 20px;
+}
+.dashboard-item img{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 150%;
+    height: 150%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: all 0.3s;
+    opacity: 25%;
+}
+.dashboard-item img:hover{
+    width: 180%;
+    height: 180%;
+    opacity: 15%;
+}
+.dark-background{
+    height: 120%;
+    width: 120%;
+    margin-left: -15px;
+}
+.dashboard-item-name{
+    color: white;
+    font-size: 28px;
+    font-weight: 600;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-wrap: nowrap;
+}

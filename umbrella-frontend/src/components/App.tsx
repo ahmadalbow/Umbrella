@@ -1,61 +1,30 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
 import "./App.css";
-import Test from "./test";
+import Home from "./Home";
+import Navbar from "./Navbar";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+
 function App() {
   const [count, setCount] = useState(0);
 
   return (
-    <div className="App">
-      <nav className=" navbar-expand navbar-light">
-        <div className=" d-flex justify-content-between position-relative align-items-center h-100 ">
-          <a className="navbar-brand" href="#">
-            <img src="../../public/img/logo.png" className="logo" alt="" />
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div
-            className="collapse navbar-collapse nav-links-container"
-            id="navbarSupportedContent"
-          >
-            <ul className="navbar-nav  mb-2 mb-lg-0 gap-5">
-              <li className="nav-item">
-                <a className="nav-link active text-center " href="#">
-                  Home
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link " href="#">
-                  Geräte
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link " aria-current="page" href="#">
-                  Prozesse
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link " href="#">
-                  Ergebnisse
-                </a>
-              </li>
-            </ul>
+    <Router>
+      <div className="App">
+        <Navbar></Navbar>
+        <Switch>
+          <div className=" app-container position-relative overflow-hidden">
+            <div className="p-5">
+              <Route exact path="/" component={Home}></Route>
+              <Route path="/ergebnisse">
+                <h1>Ahmad2</h1>
+              </Route>
+            </div>
+            <div className="gray-box"></div>
+            <div className="infrasolid-background"> INFRASOLID</div>
           </div>
-        </div>
-      </nav>
-      <div className="justify-content-center align-items-center  d-flex h-auto">
-        <Test></Test>
+        </Switch>
       </div>
-    </div>
+    </Router>
   );
 }
 

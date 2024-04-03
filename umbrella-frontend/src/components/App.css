@@ -1,5 +1,9 @@
+:root{
+  transition: all 0.3s;
+}
 body {
   background-color: #f2f2f2;
+  overflow: hidden;
 }
 .App {
   height: 100vh;
@@ -27,4 +31,54 @@ nav {
   border-radius: 20px;
   width: 100px;
   box-shadow: rgba(200, 200, 200, 0.5) 5px 5px 10px;
+}
+
+.app-container{
+  height: calc(100vh - 64px);
+}
+.gray-box{
+  background-color: #CFCFCF;
+  position: absolute;
+  transform: rotate(173deg);
+  width: 120%;
+  height: 300px;
+  bottom: calc(-100vh / 7);
+  z-index: -1;
+}
+.infrasolid-background{
+  position: absolute;
+  font-weight: 900;
+  color: #F2F2F2;
+  font-size: 160px;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  z-index: -1;
+  
+}
+.dashboard-name{
+  
+  font-size: 36px;
+  font-weight: 700;
+  position: relative;
+}
+.dashboard-name::after{
+  content: "";
+  position: absolute;
+  right: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 4px;
+  background-color: black;
+}
+.dashboard-name::before{
+  content: "";
+  position: absolute;
+  left: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 4px;
+  background-color: black;
 }
