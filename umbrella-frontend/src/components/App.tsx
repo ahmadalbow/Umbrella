@@ -2,21 +2,14 @@ import { useState } from "react";
 import "./App.css";
 import Home from "./Home";
 import Navbar from "./Navbar";
+import DevicesDashboard from "./DevicesDashboard";
+import ProcessDashboard from "./ProcessDashboard";
+import FTIR from "./FTIR";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
-
+import { TweenMax, Power3 } from "gsap";
 function App() {
   const [count, setCount] = useState(0);
 
-  TweenMax.staggerFrom(
-    ".dashboard-item",
-    1,
-    {
-      opacity: 0,
-      x: -20,
-      ease: Power3.easeOut,
-    },
-    0.08
-  );
   return (
     <Router>
       <div className="App">
@@ -25,6 +18,21 @@ function App() {
           <div className=" app-container position-relative overflow-hidden">
             <div className="p-5">
               <Route exact path="/" component={Home}></Route>
+              <Route
+                exact
+                path="/devicesdashboard"
+                component={DevicesDashboard}
+              ></Route>
+              <Route
+                exact
+                path="/processesdashboard"
+                component={ProcessDashboard}
+              ></Route>
+              <Route
+                exact
+                path="/processesdashboard/ftir"
+                component={FTIR}
+              ></Route>
               <Route path="/ergebnisse">
                 <h1>Ahmad2</h1>
               </Route>

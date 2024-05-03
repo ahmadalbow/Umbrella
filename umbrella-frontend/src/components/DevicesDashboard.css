@@ -1,0 +1,26 @@
+.dashboard-item{
+    width: 350px;
+    height: 240px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 20px;
+    background-color: red;
+}
+.device-container{
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+}
+.company-name{
+    font-size: 2rem;
+    text-wrap: nowrap;
+    font-weight: 700;
+}
+.device-name{
+    font-size: 1.8rem;
+    text-wrap: nowrap;
+    font-weight: 500;
+}

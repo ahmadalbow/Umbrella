@@ -1,3 +1,14 @@
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
 .infrasolid-logo{
     width: 700px;
 }
@@ -13,8 +24,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-    width: 150%;
-    height: 150%;
+    width: 120%;
+    height: 120%;
     object-fit: cover;
     cursor: pointer;
     transition: all 0.3s;
@@ -24,10 +35,12 @@
     height: 180%;
 }
 .dashboard-item img:hover + .dark-background{
-    width: 180%;
-    height: 180%;
+    width: 150%;
+    height: 150%;
     opacity: 85%;
 }
+
+
 .dark-background{
     background-color: black;
     height: 120%;
@@ -48,4 +61,15 @@
     text-wrap: nowrap;
     
 
+}
+button {
+    background-color: black;
+    color: white;
+    height: 40px;
+    padding: 0 30px 0  30px;
+    border-radius: 20px;
+    min-width: 150px;
+}
+button:hover {
+    background-color: #333;
 }
