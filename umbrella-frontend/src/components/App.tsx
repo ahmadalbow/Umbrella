@@ -6,7 +6,7 @@ import DevicesDashboard from "./DevicesDashboard";
 import ProcessDashboard from "./ProcessDashboard";
 import FTIR from "./FTIR";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
-import { TweenMax, Power3 } from "gsap";
+import HMP4040 from "./HMP4040";
 function App() {
   const [count, setCount] = useState(0);
 
@@ -22,6 +22,11 @@ function App() {
                 exact
                 path="/devicesdashboard"
                 component={DevicesDashboard}
+              ></Route>
+              <Route
+                exact
+                path="/devicesdashboard/HMP4040/:param"
+                component={HMP4040}
               ></Route>
               <Route
                 exact

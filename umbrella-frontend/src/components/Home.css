@@ -59,9 +59,8 @@ input[type=number] {
     left: 50%;
     transform: translate(-50%,-50%);
     text-wrap: nowrap;
-    
-
 }
+
 button {
     background-color: black;
     color: white;
@@ -69,7 +68,9 @@ button {
     padding: 0 30px 0  30px;
     border-radius: 20px;
     min-width: 150px;
+    border: none;
 }
+
 button:hover {
     background-color: #333;
 }

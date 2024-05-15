@@ -59,7 +59,7 @@ function FTIR() {
   return (
     <div className="d-flex justify-content-center align-items-center flex-column container">
       <div className="dashboard-name "> FTIR Messung</div>
-      <div className="container">
+      <div className="container mt-3">
         <div className="d-flex flex-column mt-2  align-items-center justify-content-center gap-4">
           {errorMessage && (
             <p className="error-message text-danger">{errorMessage}</p>
@@ -110,6 +110,19 @@ function FTIR() {
               required
               pattern="[0-9,]*"
               value={inputValues.soll_leistung}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="row align-items-center w-75">
+            <label className="col-md-2 offset-md-3"> Kommentar*</label>
+            <input
+              type="text"
+              className="col-md-4 "
+              id="comment"
+              placeholder="Kommentar  eingeben"
+              required
+              pattern="[0-9,]*"
+              value={inputValues.comment}
               onChange={handleInputChange}
             />
           </div>

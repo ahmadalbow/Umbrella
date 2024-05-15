@@ -10,7 +10,6 @@ function DevicesDashboard() {
     try {
       const response = await fetch("http://127.0.0.1:8000/api/");
       const jsonData = await response.json();
-      console.log(jsonData[1][0]);
       setData(jsonData);
     } catch (error) {
       console.error("Error fetching data:", error);
