@@ -189,7 +189,6 @@ function isFloat(value) {
 var checkbox1 = document.getElementById("auto_korrektur1");
 checkbox1.addEventListener("change", function () {
     
-
     if (this.checked) {
         // Checkbox is checked, start the interval
         console.log("checkbox " + 1 + " is checked")

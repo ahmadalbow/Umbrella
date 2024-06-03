@@ -23,7 +23,6 @@ def getAngeschlosseneGereate(request):
         ('HMP4040','192.168.1.5','Rohde & Schwarz'),('DMM6500','192.168.1.9'),('HMP4040','192.168.1.5'),('HMP4040','192.168.1.5'),('HMP4040','192.168.1.5'),('HMP4040','192.168.1.5'),('HMP4040','192.168.1.5'),('HMP4040','192.168.1.5'),('HMP4040','192.168.1.5'),('HMP4040','192.168.1.5')
 
     ]
-    [('HMP4040', '10.10.0.7')]
     return Response(main.Connected_Devices)
 
 
@@ -33,13 +32,15 @@ def getAngeschlosseneGereate(request):
 def hmp4040_measure(request):
     try:
         # Get the HMP4040 device based on the provided IP address
-        hmp4040 = main.get_device(request.GET.get('ip', None))
-        if hmp4040 is not None:
+        hmp4040 = (HMP4040) main.get_device(request.GET.get('ip', None))
+        ch = int(request.GET.get('ch', None))
+        if 1 is not None:
             # Read voltage, current, and power for four channels and create a response
-            response_data = {'1': [hmp4040.read_volt(1), hmp4040.read_curr(1), hmp4040.read_power(1)],
-                             '2': [hmp4040.read_volt(2), hmp4040.read_curr(2), hmp4040.read_power(2)],
-                             '3': [hmp4040.read_volt(3), hmp4040.read_curr(3), hmp4040.read_power(3)],
-                             '4': [hmp4040.read_volt(4), hmp4040.read_curr(4), hmp4040.read_power(4)]}
+            response_data = {'volt':  hmp4040.read_volt(ch) ,
+                             "curr" :   hmp4040.read_curr(ch),
+                             "power" :   hmp4040.read_power(ch),    
+                              "ac" :                        
+                             }
             return JsonResponse(response_data, status=200)
         else:
             # Return an empty response if the device is not found
@@ -51,18 +52,22 @@ def hmp4040_measure(request):
 
 # Define an API endpoint to add a channel for auto-correction
 @api_view(['POST'])
-def auto_corrector_add_ch(request):
+def auto_corrector_switch(request):
     try:
         # Parse the JSON data from the request body
         data = json.loads(request.body.decode("utf-8"))
         ip = data.get('ip')
         hmp4040 = main.get_device(ip)
         ch = int(data.get('ch'))
-        sollwert = float(data.get('sollwert'))
-        
-        # Set the desired power value for the channel and mark it for correction
-        hmp4040.channels_power[ch] = sollwert
-        hmp4040.to_be_corrected_channels.append(ch)
+        mustPower = float(data.get('mustPower'))
+        status = data.get('isChecked')
+        print(status)
+        if (status): 
+            hmp4040.channels_power[ch] = mustPower
+            hmp4040.to_be_corrected_channels.append(ch)
+        else:
+            if ch in hmp4040.to_be_corrected_channels:
+                hmp4040.to_be_corrected_channels.remove(ch)
         response_data = {}
         return JsonResponse(response_data, status=200)
     except ZeroDivisionError:
@@ -110,6 +115,7 @@ def auto_corrector_remove_ch(request):
     try:
         # Parse the JSON data from the request body
         data = json.loads(request.body.decode("utf-8"))
+        print(data)
         ip = data.get('ip')
         hmp4040 = main.get_device(ip)
         ch = int(data.get('ch'))
@@ -126,18 +132,19 @@ def auto_corrector_remove_ch(request):
 
 # Define an API endpoint to enable a channel in HMP4040
 @api_view(['POST'])
-def channel_aktivieren(request):
+def channel_switch(request):
     try:
         # Parse the JSON data from the request body
         data = json.loads(request.body.decode("utf-8"))
-
+        print(data)
         # Get the HMP4040 device based on the provided IP address
         hmp4040 = main.get_device(data.get('ip'))
 
-        # Enable the specified channel
-        hmp4040.enable_Channel(int(data.get('ch')))   
-
-        # Prepare an empty response
+        status = data.get('isChecked')
+        if (status):
+            hmp4040.enable_Channel(int(data.get('ch'))) 
+        else:
+            hmp4040.disable_Channel(int(data.get('ch')))   
         response_data = {}
 
         # Return a JSON response with a success status code (200)
@@ -170,7 +177,7 @@ def channel_deaktivieren(request):
 
 # Define an API endpoint to enable the HMP4040 output
 @api_view(['POST'])
-def out_aktivieren(request):
+def output(request):
     try:
         # Parse the JSON data from the request body
         data = json.loads(request.body.decode("utf-8"))
@@ -178,8 +185,13 @@ def out_aktivieren(request):
         # Get the HMP4040 device based on the provided IP address
         hmp4040 = main.get_device(data.get('ip'))
 
-        # Enable the output of the device
-        hmp4040.enable_output()   
+        status = data.get('isChecked')
+
+        if (status):
+            hmp4040.enable_output()
+        else:
+            hmp4040.disable_output()   
+        response_data = {}
 
         # Prepare an empty response
         response_data = {}
@@ -214,22 +226,27 @@ def out_deaktivieren(request):
 
 # Define an API endpoint to start saving data
 @api_view(['POST'])
-def start_saving_Data(request):
+def datalog(request):
     try:
         # Parse the JSON data from the request body
         data = json.loads(request.body.decode("utf-8"))
 
-        # Get the IP address from the data
-        ip = data.get('ip')
-
         # Get the HMP4040 device based on the provided IP address
-        hmp4040 = main.get_device(ip)
+        hmp4040 = main.get_device(data.get('ip'))
 
-        # Create csv Data
-        hmp4040.create_data()
+        status = data.get('isChecked')
 
-        # Set a flag indicating that data saving is running
-        hmp4040.is_saving_running = True
+        if (status):
+            # Create csv Data
+            hmp4040.create_data()
+
+            # Set a flag indicating that data saving is running
+            hmp4040.is_saving_running = True
+        else:
+            hmp4040.is_saving_running = False  
+        response_data = {}
+
+
 
         # Prepare an empty response
         response_data = {}

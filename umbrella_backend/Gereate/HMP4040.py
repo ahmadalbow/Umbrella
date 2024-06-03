@@ -7,12 +7,14 @@ import threading
 import time
 import requests
 import urllib.parse
+
 class HMP4040:
 
     
     # Constructor for the HMP4040 class, initializes various attributes and starts a periodic task.
     def __init__(self, ipaddresse):
         # Initialize a list to keep track of channels that need correction.
+        print("tried to create")
         self.to_be_corrected_channels = []
         
         # Initialize a dictionary to store power values for each channel.

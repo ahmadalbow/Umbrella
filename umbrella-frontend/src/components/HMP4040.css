@@ -100,3 +100,37 @@
   } input[type="checkbox"] {
     display: none;
   }
+
+ 
+  .HMP4040-label::before {
+    content: "";
+    display: inline-block;
+    font-size: 1.5rem;
+    width: 1.5rem; /* Adjust the width and height to your preference */
+    height: 1.5rem;
+    border: 2px solid black; /* Change the border style and color */
+    border-radius: 2px; /* Add rounded corners if desired */
+    margin-right: 10px; /* Add some space between the checkbox and label text */
+    font-size: 12px;
+  font-weight: bold;
+  
+  }
+
+  input[type="checkbox"]:checked + .HMP4040-label::before {
+    background-color: black; /* Change the background color when checked */
+    border-color: #000000; /* Change the border color when checked */
+    content: "\2713"; /* Unicode checkmark symbol */
+    color : white; 
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  font-weight: bold;
+  }
+  .HMP4040-label {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }

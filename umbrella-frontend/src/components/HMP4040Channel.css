@@ -1,0 +1,59 @@
+.channel-container{
+    height: 300px;
+    width: 250px;
+    background-color: #464646;
+    color: white;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+} /* Style the custom checkbox */
+.checkbox-label {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .channel-container .checkbox-label::before {
+  content: "";
+  display: inline-block;
+  font-size: 1rem;
+  width: 18px; /* Adjust the width and height to your preference */
+  height: 18px;
+  border: 2px solid white; /* Change the border style and color */
+  border-radius: 2px; /* Add rounded corners if desired */
+  margin-right: 10px; /* Add some space between the checkbox and label text */
+  font-size: 16px;
+font-weight: bold;
+}
+
+/* Style the checkbox when it's checked */
+.channel-container input[type="checkbox"]:checked + label::before {
+  background-color: white; /* Change the background color when checked */
+  border-color: white; /* Change the border color when checked */
+  content: "\2713"; /* Unicode checkmark symbol */
+  color : black; 
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+font-weight: bold;
+} input[type="checkbox"] {
+  display: none;
+}
+.value-container  {
+    font-size: 1.2rem !important;
+    font-weight: 600;
+}
+.value-container div {
+    font-size: 1.2rem !important;
+}
+.window .checkbox-label::before {
+
+  border: 2px solid black; /* Change the border style and color */
+
+}
+.window input[type="checkbox"]:checked + label::before {
+  background-color: black; /* Change the background color when checked */
+  border-color: black; /* Change the border color when checked */
+  color: white;
+}

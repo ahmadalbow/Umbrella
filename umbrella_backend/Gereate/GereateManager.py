@@ -31,37 +31,37 @@ class GereateManager:
         result = []
         
         with concurrent.futures.ThreadPoolExecutor() as executor:
-           ip_addresses = ['192.168.179.' + str(i) for i in range(5, 11)]
-           results = list(executor.map(GereateManager.is_device_connected, ip_addresses))
-           connected_ip_addresses = [ip for ip, result in zip(ip_addresses, results) if result]
-           for r in connected_ip_addresses:
-               result.append(('HMP4040',r,"Rohde & Schwarz")) 
+         #  ip_addresses = ['192.168.179.' + str(i) for i in range(5, 11)]
+         #  results = list(executor.map(GereateManager.is_device_connected, ip_addresses))
+         #  connected_ip_addresses = [ip for ip, result in zip(ip_addresses, results) if result]
+         #  for r in connected_ip_addresses:
+         #      result.append(('HMP4040',r,"Rohde & Schwarz")) 
         
            ip_addresses = ['10.10.0.' + str(i) for i in range(5, 11)]
            results = list(executor.map(GereateManager.is_device_connected, ip_addresses))
            connected_ip_addresses = [ip for ip, result in zip(ip_addresses, results) if result]
            for r in connected_ip_addresses:
-               result.append(('HMP4040',r))
-           ip_addresses = ['10.10.0.' + str(i) for i in range(30, 40)]
-           results = list(executor.map(GereateManager.is_device_connected, ip_addresses))
-           connected_ip_addresses = [ip for ip, result in zip(ip_addresses, results) if result]
-           for r in connected_ip_addresses:
-               result.append(('DMM6500',r))
+               result.append(('HMP4040',r,"Rohde & Schwarz"))
+          # ip_addresses = ['10.10.0.' + str(i) for i in range(30, 40)]
+          # results = list(executor.map(GereateManager.is_device_connected, ip_addresses))
+          # connected_ip_addresses = [ip for ip, result in zip(ip_addresses, results) if result]
+          # for r in connected_ip_addresses:
+           #    result.append(('DMM6500',r, "Keithley"))
         
-        import glob
-        os_name = platform.system()
+        #import glob
+       # os_name = platform.system()
             # Check if the operating system is Windows
-        if os_name == 'Linux':            
-            usb_devices = glob.glob('/dev/ttyUSB*')
-            if usb_devices:
-                for device in usb_devices:
-                    try:
-                        j = jds6600(device)        
-                        j.getinfo_devicetype()           
-                        result.append(('JDS6600',device))
-                    except:
-                        pass
-        print(result)
+        #if os_name == 'Linux':            
+         #   usb_devices = glob.glob('/dev/ttyUSB*')
+         #   if usb_devices:
+         #       for device in usb_devices:
+         #           try:
+         #               j = jds6600(device)        
+          #              j.getinfo_devicetype()           
+          #              result.append(('JDS6600',device))
+          #          except:
+          #              pass
+       # print(result)
         return result
 
 

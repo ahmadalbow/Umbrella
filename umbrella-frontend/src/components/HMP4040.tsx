@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import "./HMP4040.css";
-
+import HMP4040Channel from "./HMP4040Channel";
 interface RouteParams {
   param: string; // Define the type of your parameter here
 }
@@ -21,6 +21,7 @@ function HMP4040() {
   const toggleWindow = () => {
     setIsWindowOpen((prevState) => !prevState);
   };
+
   const sendPost = () => {
     const radioValue = (
       document.querySelector(
@@ -58,8 +59,59 @@ function HMP4040() {
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
+          toggleWindow();
         }
         // Handle successful response here
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      });
+  };
+
+  const OutPutSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const ip = param;
+    const isChecked = event.target.checked;
+    const postData = {
+      ip: ip,
+      isChecked: isChecked,
+    };
+
+    fetch("http://127.0.0.1:8000/api/hmp4040/output/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      });
+  };
+
+  const DataLogSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const ip = param;
+    const isChecked = event.target.checked;
+    const postData = {
+      ip: ip,
+      isChecked: isChecked,
+    };
+
+    fetch("http://127.0.0.1:8000/api/hmp4040/datalog/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
@@ -70,11 +122,42 @@ function HMP4040() {
     <div className="d-flex justify-content-center align-items-center flex-column container">
       <div className="dashboard-name ">
         {" "}
-        Rohde & Schwart
+        Rohde & Schwarz &#8192;
         <span className="fw-normal"> HMP4040</span>
       </div>
-      <h4>{param}</h4>
-      <button onClick={openWindow}>Ansteuern</button>
+      <h4 className="mt-2">{param}</h4>
+
+      <div className="mt-3 d-flex gap-5 justify-content-center align-items-center">
+        <button onClick={openWindow}>Ansteuern</button>
+        <div>
+          {" "}
+          <input
+            type="checkbox"
+            id={"output"}
+            name="output"
+            onChange={OutPutSwitch}
+          />
+          <label className="checkbox-label" id="outputlabel" htmlFor={"output"}>
+            OUTPUT
+          </label>
+        </div>
+        <div>
+          {" "}
+          <input
+            type="checkbox"
+            id={"autocorrector"}
+            name="autocorrector"
+            onChange={DataLogSwitch}
+          />
+          <label
+            className="checkbox-label"
+            id="autocorrector"
+            htmlFor={"autocorrector"}
+          >
+            Data Speichern
+          </label>
+        </div>
+      </div>
 
       <div>
         {/* Show the window/modal when isWindowOpen is true */}
@@ -141,7 +224,13 @@ function HMP4040() {
           </div>
         )}
       </div>
-      <div className="container mt-3"></div>
+
+      <div className="row gap-5 mt-5">
+        <HMP4040Channel ip={param} number="1"></HMP4040Channel>
+        <HMP4040Channel ip={param} number="2"></HMP4040Channel>
+        <HMP4040Channel ip={param} number="3"></HMP4040Channel>
+        <HMP4040Channel ip={param} number="4"></HMP4040Channel>
+      </div>
     </div>
   );
 }
