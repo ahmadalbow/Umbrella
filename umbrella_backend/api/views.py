@@ -32,15 +32,38 @@ def getAngeschlosseneGereate(request):
 def hmp4040_measure(request):
     try:
         # Get the HMP4040 device based on the provided IP address
-        hmp4040 = (HMP4040) main.get_device(request.GET.get('ip', None))
+        hmp4040 =  main.get_device(request.GET.get('ip', None))
         ch = int(request.GET.get('ch', None))
+        hmp4040.to_be_corrected_channels
         if 1 is not None:
             # Read voltage, current, and power for four channels and create a response
             response_data = {'volt':  hmp4040.read_volt(ch) ,
                              "curr" :   hmp4040.read_curr(ch),
                              "power" :   hmp4040.read_power(ch),    
-                              "ac" :                        
+                              "ac" :    hmp4040.to_be_corrected_channels.__contains__(ch)  ,
+                             "value" :  hmp4040.channels_power.get(ch)    ,
+                             "status" :hmp4040.get_channels_satus(ch)     
                              }
+            return JsonResponse(response_data, status=200)
+        else:
+            # Return an empty response if the device is not found
+            return JsonResponse({}, status=200)
+    except json.JSONDecodeError as e:
+        # Return an error response for invalid JSON data
+        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+    
+@api_view(['GET'])
+def out_save_status(request):
+    try:
+        # Get the HMP4040 device based on the provided IP address
+        hmp4040 =  main.get_device(request.GET.get('ip', None))
+       
+        if 1 is not None:
+            # Read voltage, current, and power for four channels and create a response
+            response_data = { 'out_status': hmp4040.get_output_status(),                       
+                              "saving_status": hmp4040.is_saving_running,        
+                             }
+            print("out", response_data)
             return JsonResponse(response_data, status=200)
         else:
             # Return an empty response if the device is not found

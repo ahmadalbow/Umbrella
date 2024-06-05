@@ -112,7 +112,6 @@ function HMP4040Channel({ ip, number }: Props) {
       console.error("Error:", error);
     }
   };
-
   useEffect(() => {
     const fetchData = () => {
       getMeasurementData(ip, number)
@@ -122,6 +121,11 @@ function HMP4040Channel({ ip, number }: Props) {
             current: data.curr,
             power: data.power,
           });
+          document.getElementById("s_ch" + number).checked = data.status;
+          if (data.ac) {
+            document.getElementById("autocorrector" + number).checked = true;
+            document.getElementById("must_power" + number).value = data.value;
+          }
         })
         .catch((error) => {
           console.error("Failed to fetch measurement data:", error);
@@ -129,10 +133,13 @@ function HMP4040Channel({ ip, number }: Props) {
     };
 
     // Fetch data immediately upon mount
-    fetchData();
+    const firstCallTimeoutId = setTimeout(
+      fetchData,
+      1000 + 200 * (parseInt(number) - 1)
+    );
 
     // Set interval to fetch data every 10 seconds
-    const intervalId = setInterval(fetchData, 60000 + 500 * parseInt(number));
+    const intervalId = setInterval(fetchData, 10000 + 500 * parseInt(number));
 
     // Cleanup interval on unmount
     return () => clearInterval(intervalId);

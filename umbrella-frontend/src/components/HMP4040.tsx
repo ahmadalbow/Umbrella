@@ -117,7 +117,27 @@ function HMP4040() {
         console.error("There was a problem with the fetch operation:", error);
       });
   };
-
+  const get_status = (ip: string) => {
+    const url = new URL("http://127.0.0.1:8000/api/out_save_status");
+    url.searchParams.append("ip", ip);
+    return fetch(url.toString())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        document.getElementById("output").checked = data.out_status;
+        document.getElementById("save").checked = data.saving_status;
+        return data;
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        throw error;
+      });
+  };
+  get_status(param);
   return (
     <div className="d-flex justify-content-center align-items-center flex-column container">
       <div className="dashboard-name ">
@@ -145,15 +165,11 @@ function HMP4040() {
           {" "}
           <input
             type="checkbox"
-            id={"autocorrector"}
-            name="autocorrector"
+            id={"save"}
+            name="save"
             onChange={DataLogSwitch}
           />
-          <label
-            className="checkbox-label"
-            id="autocorrector"
-            htmlFor={"autocorrector"}
-          >
+          <label className="checkbox-label" id="saveLabel" htmlFor={"save"}>
             Data Speichern
           </label>
         </div>

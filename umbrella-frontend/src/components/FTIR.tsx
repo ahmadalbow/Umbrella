@@ -159,6 +159,7 @@ function FTIR() {
               id="soll_leistung"
               placeholder="Soll Leistung in W  eingeben"
               required
+              min="0.5"
               pattern="[0-9,]*"
               value={inputValues.soll_leistung}
               onChange={handleInputChange}

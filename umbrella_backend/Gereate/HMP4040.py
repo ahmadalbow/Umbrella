@@ -182,16 +182,16 @@ class HMP4040:
         
 
     # Get the status of all channels (enabled or disabled).
-    def get_channels_satus(self):
+    def get_channels_satus(self,ch):
         result = []
-        for ch in range(1, 5):
-            self.query(f"INST OUT{ch}")
-            try:
-                status = int(self.query("OUTP:SEL?"))
-            except:
-                continue
-            result.append((ch, status))
-        return result
+        self.query(f"INST OUT{ch}")
+        try:
+            status = int(self.query("OUTP:SEL?"))
+        except:
+            pass
+        return status
+           
+        
 
     # Disable the output of the device.
     def disable_output(self):
