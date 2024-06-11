@@ -35,7 +35,7 @@ min-height: calc(100vh - 64px);
 }
 
 .gray-box{
-  background-color: #CFCFCF;
+  background-color: #e3e2e2;
   position: absolute;
   transform: rotate(173deg);
   width: 120%;

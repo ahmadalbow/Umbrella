@@ -4,6 +4,8 @@ import Home from "./Home";
 import Navbar from "./Navbar";
 import DevicesDashboard from "./DevicesDashboard";
 import ProcessDashboard from "./ProcessDashboard";
+import ResultsDashboard from "./ResultsDashboard";
+import Spektrum from "./spektrum";
 import FTIR from "./FTIR";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import HMP4040 from "./HMP4040";
@@ -37,6 +39,16 @@ function App() {
                 exact
                 path="/processesdashboard/ftir"
                 component={FTIR}
+              ></Route>
+              <Route
+                exact
+                path="/resultsdashboard"
+                component={ResultsDashboard}
+              ></Route>
+              <Route
+                exact
+                path="/resultsdashboard/spektrum"
+                component={Spektrum}
               ></Route>
               <Route path="/ergebnisse">
                 <h1>Ahmad2</h1>
