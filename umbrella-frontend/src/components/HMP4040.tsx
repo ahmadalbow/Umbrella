@@ -1,50 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./HMP4040.css";
 import HMP4040Channel from "./HMP4040Channel";
+
 interface RouteParams {
-  param: string; // Define the type of your parameter here
+  param: string;
 }
 
 function HMP4040() {
-  const { param } = useParams<RouteParams>(); // Specify the type of useParams
-
+  const { param } = useParams<RouteParams>();
   const [isWindowOpen, setIsWindowOpen] = useState(false);
-  const openWindow = () => {
-    setIsWindowOpen(true);
-  };
 
-  const closeWindow = () => {
-    setIsWindowOpen(false);
-  };
-
-  const toggleWindow = () => {
-    setIsWindowOpen((prevState) => !prevState);
-  };
+  const openWindow = () => setIsWindowOpen(true);
+  const closeWindow = () => setIsWindowOpen(false);
+  const toggleWindow = () => setIsWindowOpen((prevState) => !prevState);
 
   const sendPost = () => {
     const radioValue = (
       document.querySelector(
         'input[name="custom-radio-group"]:checked'
       ) as HTMLInputElement
-    )?.value;
+    )?.value ?? null;
+
     const checkboxes = document.querySelectorAll(
       'input[type="checkbox"]:checked'
     );
     const textInput = (
       document.querySelector('input[type="text"]') as HTMLInputElement
-    )?.value;
+    )?.value ?? "";
 
-    const checkboxData = Array.from(checkboxes).map(
-      (checkbox: HTMLInputElement) => ({
-        number: checkbox.name,
-        value: checkbox.value,
-      })
-    );
+    const checkboxData = Array.from(checkboxes).map((checkbox) => {
+      const inputElement = checkbox as HTMLInputElement;
+      return {
+        number: inputElement.name,
+        value: inputElement.value,
+      };
+    });
+
     const ip = param;
     const postData = {
-      ip: ip,
-      radioValue: radioValue,
+      ip,
+      radioValue,
       checkboxes: checkboxData,
       value: textInput,
     };
@@ -59,7 +55,6 @@ function HMP4040() {
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
-          toggleWindow();
         }
         // Handle successful response here
       })
@@ -72,8 +67,8 @@ function HMP4040() {
     const ip = param;
     const isChecked = event.target.checked;
     const postData = {
-      ip: ip,
-      isChecked: isChecked,
+      ip,
+      isChecked,
     };
 
     fetch("http://127.0.0.1:8000/api/hmp4040/output/", {
@@ -97,8 +92,8 @@ function HMP4040() {
     const ip = param;
     const isChecked = event.target.checked;
     const postData = {
-      ip: ip,
-      isChecked: isChecked,
+      ip,
+      isChecked,
     };
 
     fetch("http://127.0.0.1:8000/api/hmp4040/datalog/", {
@@ -117,6 +112,7 @@ function HMP4040() {
         console.error("There was a problem with the fetch operation:", error);
       });
   };
+
   const get_status = (ip: string) => {
     const url = new URL("http://127.0.0.1:8000/api/out_save_status");
     url.searchParams.append("ip", ip);
@@ -128,8 +124,10 @@ function HMP4040() {
         return response.json();
       })
       .then((data) => {
-        document.getElementById("output").checked = data.out_status;
-        document.getElementById("save").checked = data.saving_status;
+        (document.getElementById("output") as HTMLInputElement).checked =
+          data.out_status ?? false;
+        (document.getElementById("save") as HTMLInputElement).checked =
+          data.saving_status ?? false;
         return data;
       })
       .catch((error) => {
@@ -137,11 +135,16 @@ function HMP4040() {
         throw error;
       });
   };
-  get_status(param);
+
+  useEffect(() => {
+    if (param) {
+      get_status(param);
+    }
+  }, [param]);
+
   return (
     <div className="d-flex justify-content-center align-items-center flex-column container">
-      <div className="dashboard-name ">
-        {" "}
+      <div className="dashboard-name">
         Rohde & Schwarz &#8192;
         <span className="fw-normal"> HMP4040</span>
       </div>
@@ -150,43 +153,40 @@ function HMP4040() {
       <div className="mt-3 d-flex gap-5 justify-content-center align-items-center">
         <button onClick={openWindow}>Ansteuern</button>
         <div>
-          {" "}
           <input
             type="checkbox"
-            id={"output"}
+            id="output"
             name="output"
             onChange={OutPutSwitch}
           />
-          <label className="checkbox-label" id="outputlabel" htmlFor={"output"}>
+          <label className="checkbox-label" id="outputlabel" htmlFor="output">
             OUTPUT
           </label>
         </div>
         <div>
-          {" "}
           <input
             type="checkbox"
-            id={"save"}
+            id="save"
             name="save"
             onChange={DataLogSwitch}
           />
-          <label className="checkbox-label" id="saveLabel" htmlFor={"save"}>
+          <label className="checkbox-label" id="saveLabel" htmlFor="save">
             Data Speichern
           </label>
         </div>
       </div>
 
       <div>
-        {/* Show the window/modal when isWindowOpen is true */}
         {isWindowOpen && (
           <div className="window position-relativ">
             <div
-              className="window-background w-100 h-100 position-absolute "
+              className="window-background w-100 h-100 position-absolute"
               onClick={toggleWindow}
             ></div>
-            <div className=" window-content">
+            <div className="window-content">
               <h2 className="fw-bold">Ansteuern</h2>
               <div className="d-flex flex-column align-items-center gap-5 mt-4 justify-content-center">
-                <div className="d-flex gap-3  justify-content-center">
+                <div className="d-flex gap-3 justify-content-center">
                   <label className="custom-radio">
                     <input type="radio" name="custom-radio-group" value="V" />
                     <div className="radio-button text-center">

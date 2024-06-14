@@ -52,7 +52,7 @@ function Spektrum() {
       for (let i = 0; i < values.length; i++){
          let dataset = {
             label: values[i].date,
-            data:  values[i].values.map((value, index) => ({ x: jsonData.wellNumber[index], y: value })),
+            data:  values[i].values.map((value : number, index: number) => ({ x: jsonData.wellNumber[index], y: value })),
             backgroundColor: materialColors[i],
             borderColor: materialColors[i],
             pointBackgroundColor: materialColors[i],
@@ -67,7 +67,7 @@ function Spektrum() {
       }
       datasets.push({
         label: jsonData.blackName,
-        data: jsonData.blackWellNumber.map((value, index) => ({ x: value , y: jsonData.black[index] })),
+        data: jsonData.blackWellNumber.map((value : number, index : number) => ({ x: value , y: jsonData.black[index] })),
             backgroundColor: "#000000",
             borderColor: "#000000",
             pointBackgroundColor:  "#000000",
@@ -104,16 +104,7 @@ function Spektrum() {
     fetchData();
   };
  
-  const handleDownload = () => {
-    if (chartRef.current) {
-      console.log(chartRef.current.canvas)
-      
-      const link = document.createElement('a');
-        link.href = chartRef.current.canvas.toDataURL('image/png');
-        link.download = ftirData.seriel_number + '.png';
-        link.click();
-    }
-  };
+ 
   const data = {
     datasets:ftirData.values,
   };
@@ -127,17 +118,15 @@ function Spektrum() {
       },
       legend: {
         labels: {
-          // Set the font color for the legend labels
-          fontColor: 'black',
+          color: 'black',
         },
-        // Set the background color for the legend
         backgroundColor: '#550000',
         borderRadius: 10,
       },
     },
     scales: {
       x: {
-        type: 'linear',
+        type: 'linear' as const, // Specify the type explicitly as 'linear'
         min: 0,
         max: 15,
         ticks: {
@@ -159,7 +148,6 @@ function Spektrum() {
       },
     },
   };
-
   return (
     <div className="d-flex justify-content-center align-items-center flex-column container">
       <div className="dashboard-name">Spektrum</div>
@@ -226,7 +214,7 @@ function Spektrum() {
             <button
               type="button"
               className="main-btn"
-              onClick={handleDownload}
+              
             >
              Als PNG herrunterladen
             </button>

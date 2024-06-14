@@ -1,14 +1,23 @@
-
 import "./Ftir.css";
 import { Link } from "react-router-dom";
 import { sendScanRequest } from "./api"; // Assuming these are functions for sending requests and checking progress
 import React, { useEffect, useRef, useState } from "react";
 import { Scatter } from "react-chartjs-2";
-import { Chart as ChartJS, PointElement, ScatterController, CategoryScale, LinearScale, Title, Tooltip, Legend , LineElement} from 'chart.js';
-
+import {
+  Chart as ChartJS,
+  PointElement,
+  ScatterController,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend,
+  LineElement
+} from 'chart.js';
 import html2canvas from 'html2canvas'; // Import html2canvas for converting to PNG
 
-ChartJS.register(ScatterController, CategoryScale, LinearScale, Title, Tooltip, Legend,PointElement, LineElement);
+ChartJS.register(ScatterController, CategoryScale, LinearScale, Title, Tooltip, Legend, PointElement, LineElement);
+
 function FTIR() {
   const [inputValues, setInputValues] = useState({
     unterverzeichnis: "",
@@ -17,6 +26,7 @@ function FTIR() {
     soll_leistung: 0,
     comment: "",
   });
+
   const materialColors = [
     "#064FF0", // Blue
     "#E91E63", // Pink
@@ -34,15 +44,24 @@ function FTIR() {
     "#FFEB3B", // Yellow
     "#4CAF50", // Green
   ];
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValues({
       ...inputValues,
       [e.target.id]: e.target.value,
     });
   };
+
   const [errorMessage, setErrorMessage] = useState("");
   const [status, setStatus] = useState({ status: "", className: "" });
-  const [ftirData, setData] = useState({ wellNumber: [], values: [], black: [], blackWellNumber: [], blackName: "",  seriel_number : ""});
+  const [ftirData, setData] = useState({
+    wellNumber: [],
+    values: [],
+    black: [],
+    blackWellNumber: [],
+    blackName: "",
+    seriel_number: ""
+  });
 
   const handleSubmit = () => {
     // Validate input values
@@ -74,7 +93,6 @@ function FTIR() {
         setStatus({ status: "Messung fertig", className: "" });
         fetchFTIRData();
         updateStatus();
-        
       })
       .catch((error) => {
         setStatus({ status: "Keine Verbindung", className: "text-danger" });
@@ -82,8 +100,8 @@ function FTIR() {
         // Handle error as needed
       });
   };
-  // Disable button
-  const checkStrahlerNummer = (inputString: string) => {
+
+  const checkStrahlerNummer = (inputString: string): boolean => {
     // Check if the input string has at least 4 characters
     if (inputString.length < 4) {
       return false;
@@ -94,15 +112,21 @@ function FTIR() {
     const last4Int = Number(last4Characters);
 
     // Convert the last 4 characters to an integer and add 1
-    if (!isNaN(last4Int)) {
-      document.getElementById("strahlernummer").style.borderColor = "black";
+    const element = document.getElementById("strahlernummer");
 
+    if (!isNaN(last4Int)) {
+      if (element) {
+        element.style.borderColor = "black";
+      }
       return true;
     } else {
-      document.getElementById("strahlernummer").style.borderColor = "red";
+      if (element) {
+        element.style.borderColor = "red";
+      }
       return false;
     }
   };
+
   function updateStatus() {
     // Check if the input string has at least 4 characters
     const inputString = inputValues.strahlernummer;
@@ -124,66 +148,59 @@ function FTIR() {
     const modifiedString =
       stringWithoutLast4 + String(modifiedInt).padStart(4, "0");
     console.log(modifiedString);
-    inputValues.strahlernummer = modifiedString
-    setInputValues;
+    inputValues.strahlernummer = modifiedString;
+    setInputValues({ ...inputValues, strahlernummer: modifiedString });
   }
 
-  
   const fetchFTIRData = async () => {
     try {
-      
       const url = new URL("http://127.0.0.1:8000/api/get_dpt_data/");
-      url.searchParams.append("serial_number",inputValues.strahlernummer,
-      );
+      url.searchParams.append("serial_number", inputValues.strahlernummer);
       url.searchParams.append("temp", "500");
-      url.searchParams.append("scale","1.05");
-  
+      url.searchParams.append("scale", "1.05");
+
       const response = await fetch(url.toString());
       const jsonData = await response.json();
-      const values  = jsonData.values 
+      const values = jsonData.values;
 
-      const datasets = []
-      for (let i = 0; i < values.length; i++){
-         let dataset = {
-            label: values[i].date,
-            data:  values[i].values.map((value, index) => ({ x: jsonData.wellNumber[index], y: value })),
-            backgroundColor: materialColors[i],
-            borderColor: materialColors[i],
-            pointBackgroundColor: materialColors[i],
-            pointBorderColor: materialColors[i],
-            pointRadius: 0,
-            pointHoverRadius: 2,
-            showLine: true, // Connect points with lines
-            borderWidth : 1.5
-          
-         }
-         datasets.push(dataset)
+      const datasets = [];
+      for (let i = 0; i < values.length; i++) {
+        let dataset = {
+          label: values[i].date,
+          data: values[i].values.map((value :number, index : number) => ({ x: jsonData.wellNumber[index], y: value })),
+          backgroundColor: materialColors[i],
+          borderColor: materialColors[i],
+          pointBackgroundColor: materialColors[i],
+          pointBorderColor: materialColors[i],
+          pointRadius: 0,
+          pointHoverRadius: 2,
+          showLine: true, // Connect points with lines
+          borderWidth: 1.5
+        }
+        datasets.push(dataset)
       }
       datasets.push({
         label: jsonData.blackName,
-        data: jsonData.blackWellNumber.map((value, index) => ({ x: value , y: jsonData.black[index] })),
-            backgroundColor: "#000000",
-            borderColor: "#000000",
-            pointBackgroundColor:  "#000000",
-            pointBorderColor: "#000000",
-            pointRadius: 0,
-            pointHoverRadius: 2,
-            showLine: true, // Connect points with lines
-            borderWidth : 1.5
-          
-
+        data: jsonData.blackWellNumber.map((value : number, index :  number) => ({ x: value, y: jsonData.black[index] })),
+        backgroundColor: "#000000",
+        borderColor: "#000000",
+        pointBackgroundColor: "#000000",
+        pointBorderColor: "#000000",
+        pointRadius: 0,
+        pointHoverRadius: 2,
+        showLine: true, // Connect points with lines
+        borderWidth: 1.5
       })
-      jsonData.values = datasets
+      jsonData.values = datasets;
       setData(jsonData);
       console.log(jsonData)
-      
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
   const data = {
-    datasets:ftirData.values,
+    datasets: ftirData.values,
   };
 
   const options = {
@@ -195,17 +212,15 @@ function FTIR() {
       },
       legend: {
         labels: {
-          // Set the font color for the legend labels
-          fontColor: 'black',
+          color: 'black',
         },
-        // Set the background color for the legend
         backgroundColor: '#550000',
         borderRadius: 10,
       },
     },
     scales: {
       x: {
-        type: 'linear',
+        type: 'linear' as const, // Specify the type explicitly as 'linear'
         min: 0,
         max: 15,
         ticks: {
@@ -227,22 +242,20 @@ function FTIR() {
       },
     },
   };
+
   return (
     <div className="d-flex justify-content-center align-items-center flex-column container">
-      <div className="dashboard-name "> FTIR Messung</div>
-      <div className="w-100 mt-3  d-flex d-flex  flex-column flex-lg-row   align-items-center  justify-content-between ">
-        <div className="d-flex flex-column   mt-2  align-items-center justify-content-center gap-4">
+      <div className="dashboard-name">FTIR Messung</div>
+      <div className="w-100 mt-3 d-flex flex-column flex-lg-row align-items-center justify-content-between">
+        <div className="d-flex flex-column mt-2 align-items-center justify-content-center gap-4">
           {errorMessage && (
             <p className="error-message text-danger">{errorMessage}</p>
           )}
           <div className="row align-items-center w-100 gap-2">
-            <label className="col-12">
-              {" "}
-              Unterverzeichnis*
-            </label>
+            <label className="col-12">Unterverzeichnis*</label>
             <input
               type="text"
-              className="col-12  "
+              className="col-12"
               id="unterverzeichnis"
               placeholder="Unterverzeichnis eingeben"
               required
@@ -251,10 +264,10 @@ function FTIR() {
             />
           </div>
           <div className="row align-items-center w-100 gap-2">
-            <label className="col-12  ">Strahlertyp*</label>
+            <label className="col-12">Strahlertyp*</label>
             <input
               type="text"
-              className="col-12 "
+              className="col-12"
               id="strahlertyp"
               placeholder="Strahlertyp eingeben"
               required
@@ -263,13 +276,10 @@ function FTIR() {
             />
           </div>
           <div className="row align-items-center w-100 gap-2">
-            <label className="col-12  ">
-              {" "}
-              Strahlernummer*
-            </label>
+            <label className="col-12">Strahlernummer*</label>
             <input
               type="text"
-              className="col-12 "
+              className="col-12"
               id="strahlernummer"
               placeholder="Strahlernummer eingeben"
               value={inputValues.strahlernummer}
@@ -278,14 +288,12 @@ function FTIR() {
             />
           </div>
           <div className="row align-items-center w-100 gap-2">
-            <label className="col-12 ">
-              Soll Leistung*
-            </label>
+            <label className="col-12">Soll Leistung*</label>
             <input
               type="number"
-              className="col-12 "
+              className="col-12"
               id="soll_leistung"
-              placeholder="Soll Leistung in W  eingeben"
+              placeholder="Soll Leistung in W eingeben"
               required
               min="0.5"
               pattern="[0-9,]*"
@@ -294,7 +302,7 @@ function FTIR() {
             />
           </div>
 
-          <div className="d-flex just-conntent-center align-items-center mt-2 gap-4 ">
+          <div className="d-flex justify-content-center align-items-center mt-2 gap-4">
             <button
               type="submit"
               className="main-btn"
@@ -306,9 +314,9 @@ function FTIR() {
             <div className={status.className}>{status.status}</div>
           </div>
         </div>
-        <div className="dataCard revenueCard m-5 ">
-            <Scatter id="mychart" data={data} options={options}  />
-          </div>
+        <div className="dataCard revenueCard m-5">
+          <Scatter id="mychart" data={data} options={options} />
+        </div>
       </div>
     </div>
   );
