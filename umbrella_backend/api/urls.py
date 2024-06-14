@@ -19,5 +19,5 @@ urlpatterns = [
     path('progressbar/',views.get_progressBar),
     path('set_volt/',views.set_volt),
     path('out_save_status/',views.out_save_status),
-   
+   path('get_dpt_data/',views.getDptData),
 ]

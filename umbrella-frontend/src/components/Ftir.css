@@ -13,3 +13,27 @@ input{
   label{
     font-weight: 700;
   }
+  .dataCard {
+    background-color: #efefef;
+    border-radius: 0.5em;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    padding: 1em;
+  }
+  
+  .revenueCard {
+    width: 60%;
+  }
+  @media screen and (max-width: 992px) {
+    .revenueCard {
+      width: 100%;
+    }
+  }
+  .customerCard {
+    width: 50%;
+    
+  }
+  
+  .categoryCard {
+    width: 40%;
+    
+  }

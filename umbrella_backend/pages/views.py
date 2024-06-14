@@ -5,8 +5,9 @@ from Gereate.GereateManager import GereateManager
 from Gereate.HMP4040 import HMP4040
 from main import main  # Assuming the main module is imported
 import platform
+from .  import models
+from core.dpt_to_graph import DptToGraph
 
-# Index view to display information about the operating system.
 def index(request):
     os_name = platform.system()
     if os_name == 'Windows':
@@ -17,6 +18,21 @@ def index(request):
     # Handle other operating systems
     else:
         print(f'This is an unsupported operating system: {os_name}')
+
+    # Get the Measurement object with id=1
+    measurement =models.Measurement.objects.get(id=40)
+
+    # Get all MeasurementValues related to this Measurement
+    wavelengths = measurement.measurement_values.values_list('wavelength', flat=True)
+
+
+    data = DptToGraph(100)
+    print(data.merged_data[data.merged_data.columns.tolist()[1]].tolist())
+
+    
+    # Index view to display information about the operating system.
+
+
     return render(request, 'pages/index.html', {'ahmad': [1, 2, 3, 4, 5]})
 
 # View to display connected devices.

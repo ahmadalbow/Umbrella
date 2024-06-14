@@ -14,7 +14,9 @@ import os
 import socket
 import shutil
 from pages.models import Measurement, MeasurementValues
-
+from core.dpt_to_graph import DptToGraph
+from django.http import JsonResponse
+from rest_framework.decorators import api_view
 # Define an API endpoint to get devices, that are connected to the server
 @api_view(['GET'])
 def getAngeschlosseneGereate(request):
@@ -25,7 +27,57 @@ def getAngeschlosseneGereate(request):
     ]
     return Response(main.Connected_Devices)
 
+def get_measurement_ids_by_serial_number(serial_number):
+    # Filter the Measurement objects by the given serial number
+    measurements = Measurement.objects.filter(serial_number=serial_number)
+    
+    for m in measurements:
+        print(m.serial_number,m.serial_number)
+        
+    # Extract and return the list of IDs from the filtered measurements
+    measurement_ids = [measurement.id for measurement in measurements]
+    return measurement_ids
 
+
+@api_view(['GET'])
+def getDptData(request):
+    serial_number = request.GET.get('serial_number', None)
+    
+    temp = float(request.GET.get('temp', None))
+    scale = float(request.GET.get('scale', None))
+    measurement_ids = get_measurement_ids_by_serial_number(serial_number)
+    measurements = []
+    print(measurement_ids)
+    if  len(measurement_ids) == 0:
+        response_data = {
+            "wellNumber": [],
+            "values": [],
+            "black": [],
+            "blackWellNumber": [],
+            "seriel_number" : serial_number
+        }
+        return JsonResponse(response_data, status=200)
+
+    for m in measurement_ids:
+        dpt = DptToGraph(m)
+        values = dpt.merged_data[dpt.merged_data.columns.tolist()[1]].tolist()
+        date = dpt.date
+        measurements.append({
+            "values": values,
+            "date": date
+        })
+
+    dpt = DptToGraph(measurement_ids[0], temp, scale)
+    response_data = {
+        "wellNumber": dpt.merged_data[dpt.merged_data.columns.tolist()[0]].tolist(),
+        "values": measurements,
+        "black": dpt.getIntensity(),
+        "blackWellNumber": dpt.getwavelength(),
+        "blackName": dpt.getName(),
+        "seriel_number" : serial_number
+    }
+
+    return JsonResponse(response_data, status=200)
 
 # Define an API endpoint to measure data from an HMP4040 device
 @api_view(['GET'])
