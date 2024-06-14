@@ -25,6 +25,7 @@ def getAngeschlosseneGereate(request):
         ('HMP4040','192.168.1.5','Rohde & Schwarz'),('DMM6500','192.168.1.9'),('HMP4040','192.168.1.5'),('HMP4040','192.168.1.5'),('HMP4040','192.168.1.5'),('HMP4040','192.168.1.5'),('HMP4040','192.168.1.5'),('HMP4040','192.168.1.5'),('HMP4040','192.168.1.5'),('HMP4040','192.168.1.5')
 
     ]
+    print("cc",main.Connected_Devices)
     return Response(main.Connected_Devices)
 
 def get_measurement_ids_by_serial_number(serial_number):

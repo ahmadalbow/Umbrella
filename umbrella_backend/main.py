@@ -3,8 +3,8 @@ from Gereate.HMP4040 import HMP4040
 
 class main:
     Devices = []
-    #Connected_Devices = GereateManager.getAngeschlosseneGereate()
-    Connected_Devices = []
+    Connected_Devices = GereateManager.getAngeschlosseneGereate()
+    
     for p in Connected_Devices:
         if (p[2] == "Rohde & Schwarz"):
             try:

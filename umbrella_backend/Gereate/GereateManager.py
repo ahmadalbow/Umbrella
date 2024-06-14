@@ -31,16 +31,16 @@ class GereateManager:
         result = []
         
         with concurrent.futures.ThreadPoolExecutor() as executor:
-         #  ip_addresses = ['192.168.179.' + str(i) for i in range(5, 11)]
-         #  results = list(executor.map(GereateManager.is_device_connected, ip_addresses))
-         #  connected_ip_addresses = [ip for ip, result in zip(ip_addresses, results) if result]
-         #  for r in connected_ip_addresses:
-         #      result.append(('HMP4040',r,"Rohde & Schwarz")) 
+            ip_addresses = ['192.168.179.' + str(i) for i in range(4, 11)]
+            results = list(executor.map(GereateManager.is_device_connected, ip_addresses))
+            connected_ip_addresses = [ip for ip, result in zip(ip_addresses, results) if result]
+            for r in connected_ip_addresses:
+                result.append(('HMP4040',r,"Rohde & Schwarz")) 
         
-           ip_addresses = ['10.10.0.' + str(i) for i in range(5, 11)]
-           results = list(executor.map(GereateManager.is_device_connected, ip_addresses))
-           connected_ip_addresses = [ip for ip, result in zip(ip_addresses, results) if result]
-           for r in connected_ip_addresses:
+            ip_addresses = ['10.10.0.' + str(i) for i in range(5, 11)]
+            results = list(executor.map(GereateManager.is_device_connected, ip_addresses))
+            connected_ip_addresses = [ip for ip, result in zip(ip_addresses, results) if result]
+            for r in connected_ip_addresses:
                result.append(('HMP4040',r,"Rohde & Schwarz"))
           # ip_addresses = ['10.10.0.' + str(i) for i in range(30, 40)]
           # results = list(executor.map(GereateManager.is_device_connected, ip_addresses))

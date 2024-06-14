@@ -3,7 +3,8 @@ export function sendScanRequest(
   strahlertyp: string,
   strahlernummer: string,
   soll_leistung: number,
-  comment: string
+  comment: string,
+  
 ) {
   // URL to send the POST request to
   const url = "http://127.0.0.1:8000/api/scan/"; // Replace with your actual API endpoint
@@ -15,6 +16,7 @@ export function sendScanRequest(
     strahlernummer: strahlernummer,
     soll_leistung: soll_leistung,
     comment: comment,
+    ip: "192.168.179.5"
   };
   console.log(data);
   // Options for the fetch function

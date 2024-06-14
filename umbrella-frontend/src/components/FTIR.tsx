@@ -72,8 +72,9 @@ function FTIR() {
     )
       .then(() => {
         setStatus({ status: "Messung fertig", className: "" });
-        updateStatus();
         fetchFTIRData();
+        updateStatus();
+        
       })
       .catch((error) => {
         setStatus({ status: "Keine Verbindung", className: "text-danger" });
@@ -123,6 +124,7 @@ function FTIR() {
     const modifiedString =
       stringWithoutLast4 + String(modifiedInt).padStart(4, "0");
     console.log(modifiedString);
+    inputValues.strahlernummer = modifiedString
     setInputValues;
   }
 
