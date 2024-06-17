@@ -154,7 +154,7 @@ function FTIR() {
 
   const fetchFTIRData = async () => {
     try {
-      const url = new URL("http://172.16.0.163:8000/api/get_dpt_data/");
+      const url = new URL("http://127.0.0.1:8000/api/get_dpt_data/");
       url.searchParams.append("serial_number", inputValues.strahlernummer);
       url.searchParams.append("temp", "500");
       url.searchParams.append("scale", "1.05");
