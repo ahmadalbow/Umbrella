@@ -32,6 +32,16 @@ function Spektrum() {
     "#FFEB3B", // Yellow
     "#4CAF50", // Green
   ];
+  const handleDownload = () => {
+    if (chartRef.current) {
+      console.log(chartRef.current.canvas)
+
+      const link = document.createElement('a');
+        link.href = chartRef.current.canvas.toDataURL('image/png');
+        link.download = ftirData.seriel_number + '.png';
+        link.click();
+    }
+  };
   const fetchData = async () => {
     try {
       
@@ -214,7 +224,7 @@ function Spektrum() {
             <button
               type="button"
               className="main-btn"
-              
+              onClick={handleDownload}
             >
              Als PNG herrunterladen
             </button>
