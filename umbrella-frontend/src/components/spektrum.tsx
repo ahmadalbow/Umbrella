@@ -219,8 +219,9 @@ function Spektrum() {
              Als PNG herrunterladen
             </button>
           </div>
-          <div className="dataCard revenueCard m-5">
+          <div className="dataCard revenueCard-Full m-5">
             <Scatter id="mychart" data={data} options={options}  ref={chartRef} />
+            
           </div>
         </div>
       </div>
