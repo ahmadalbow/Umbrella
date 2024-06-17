@@ -14,7 +14,7 @@ function HMP4040Channel({ ip, number }: Props) {
   });
 
   const getMeasurementData = async (ip: string, ch: string) => {
-    const url = new URL("http://127.0.0.1:8000/api/hmp4040_measure");
+    const url = new URL("http://172.16.0.163:8000/api/hmp4040_measure");
     url.searchParams.append("ip", ip);
     url.searchParams.append("ch", ch);
     try {
@@ -41,7 +41,7 @@ function HMP4040Channel({ ip, number }: Props) {
     };
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/api/channel_switch/",
+        "http://172.16.0.163:8000/api/channel_switch/",
         {
           method: "POST",
           headers: {
@@ -87,7 +87,7 @@ function HMP4040Channel({ ip, number }: Props) {
     };
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/api/auto_corrector_switch/",
+        "http://172.16.0.163:8000/api/auto_corrector_switch/",
         {
           method: "POST",
           headers: {

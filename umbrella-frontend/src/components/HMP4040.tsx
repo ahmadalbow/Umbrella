@@ -45,7 +45,7 @@ function HMP4040() {
       value: textInput,
     };
 
-    fetch("http://127.0.0.1:8000/api/hmp4040/set/", {
+    fetch("http://172.16.0.163:8000/api/hmp4040/set/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -71,7 +71,7 @@ function HMP4040() {
       isChecked,
     };
 
-    fetch("http://127.0.0.1:8000/api/hmp4040/output/", {
+    fetch("http://172.16.0.163:8000/api/hmp4040/output/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -96,7 +96,7 @@ function HMP4040() {
       isChecked,
     };
 
-    fetch("http://127.0.0.1:8000/api/hmp4040/datalog/", {
+    fetch("http://172.16.0.163:8000/api/hmp4040/datalog/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -114,7 +114,7 @@ function HMP4040() {
   };
 
   const get_status = (ip: string) => {
-    const url = new URL("http://127.0.0.1:8000/api/out_save_status");
+    const url = new URL("http://172.16.0.163:8000/api/out_save_status");
     url.searchParams.append("ip", ip);
     return fetch(url.toString())
       .then((response) => {

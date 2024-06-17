@@ -7,7 +7,7 @@ export function sendScanRequest(
   
 ) {
   // URL to send the POST request to
-  const url = "http://127.0.0.1:8000/api/scan/"; // Replace with your actual API endpoint
+  const url = "http://172.16.0.163:8000/api/scan/"; // Replace with your actual API endpoint
 
   // Request payload
   const data = {

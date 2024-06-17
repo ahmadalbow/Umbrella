@@ -35,7 +35,7 @@ function Spektrum() {
   const fetchData = async () => {
     try {
       
-      const url = new URL("http://127.0.0.1:8000/api/get_dpt_data/");
+      const url = new URL("http://172.16.0.163:8000/api/get_dpt_data/");
       url.searchParams.append("serial_number", serialNumber);
       url.searchParams.append("temp", temperature);
       url.searchParams.append("scale",scale);
