@@ -74,3 +74,33 @@ button {
 button:hover {
     background-color: #333;
 }
+file-upload-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .file-upload {
+    display: none;
+  }
+  
+  .file-upload-label {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #e0e0e0;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .file-upload-label:hover {
+    background-color: #d0d0d0;
+  }
+  
+  .file-name {
+    margin-left: 10px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 25px;
+  }
+  

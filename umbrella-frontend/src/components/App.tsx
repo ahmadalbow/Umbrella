@@ -9,6 +9,7 @@ import Spektrum from "./spektrum";
 import FTIR from "./FTIR";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import HMP4040 from "./HMP4040";
+import DptDataiAuswertung from "./DptDataiAuswertung";
 function App() {
   const [count, setCount] = useState(0);
 
@@ -50,9 +51,11 @@ function App() {
                 path="/resultsdashboard/spektrum"
                 component={Spektrum}
               ></Route>
-              <Route path="/ergebnisse">
-                <h1>Ahmad2</h1>
-              </Route>
+               <Route
+                exact
+                path="/resultsdashboard/dptfiletogrpah"
+                component={DptDataiAuswertung}
+              ></Route>
             </div>
             <div className="gray-box"></div>
             <div className="infrasolid-background"> INFRASOLID</div>

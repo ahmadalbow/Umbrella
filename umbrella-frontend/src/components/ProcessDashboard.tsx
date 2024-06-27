@@ -6,7 +6,7 @@ function ProcessDashboard() {
   return (
     <div className="d-flex justify-content-center align-items-center flex-column container">
       <div className="dashboard-name mt-3"> Process Dashboard</div>
-      <div className="row gap-5 mt-5">
+      <div className="row gap-5 mt-5 flex-wrap">
         <div className="col process-dashboard-item">
           <Link to="/processesdashboard/ftir">
             {" "}
@@ -15,7 +15,9 @@ function ProcessDashboard() {
             <div className="dashboard-item-name pe-none">FTIR Messung</div>
           </Link>
         </div>
+       
       </div>
+
     </div>
   );
 }

@@ -268,20 +268,7 @@ const difOptions = {
       },
     },
 };
-// Inside your component
-useEffect(() => {
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      handleSubmit();
-    }
-  };
 
-  window.addEventListener('keydown', handleKeyDown);
-  
-  return () => {
-    window.removeEventListener('keydown', handleKeyDown);
-  };
-}, [serialNumber, temperature, scale]); // Add all relevant state variables he
   return (
     <div className="d-flex justify-content-center align-items-center flex-column container">
       <div className="dashboard-name">Spektrum</div>

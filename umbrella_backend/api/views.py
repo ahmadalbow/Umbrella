@@ -1,22 +1,25 @@
 import datetime
 import time
 from urllib.parse import quote
+from django.conf import settings
 import requests
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 import json
-from Gereate.GereateManager import GereateManager
-from Gereate.HMP4040 import HMP4040
+from api.serializers import DptSaveSerializer, FileUploadSerializer
 from main import main
-import csv
 import os
 import socket
 import shutil
 from pages.models import Measurement, MeasurementValues
 from core.dpt_to_graph import DptToGraph
+from core.dptFile_to_graph import DptFileToGraph
+import re
+import tempfile
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
+
 # Define an API endpoint to get devices, that are connected to the server
 @api_view(['GET'])
 def getAngeschlosseneGereate(request):
@@ -80,6 +83,131 @@ def getDptData(request):
 
     return JsonResponse(response_data, status=200)
 
+@api_view(['POST'])
+def ConvertDptToGraphValues(request):
+    serializer = FileUploadSerializer(data=request.data)
+    if serializer.is_valid():
+        measurements = []
+        file = serializer.validated_data['file']
+
+        # Extract information from filename
+        file_info = extract_info_from_filename(file.name)
+        print(file_info)
+        # Read the original file content and replace commas with dots
+        file_content = file.read().decode('utf-8')
+        modified_content = file_content.replace(',', '.')
+        
+        # Create a temporary file with the modified content
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            temp_file.write(modified_content.encode('utf-8'))
+            temp_file.seek(0)
+            temp_file_path = temp_file.name
+        
+        # Pass the temporary file to the DptFileToGraph class
+        with open(temp_file_path, 'r') as temp_file:
+            dpt = DptFileToGraph(file=temp_file)
+
+        values = dpt.merged_data[dpt.merged_data.columns.tolist()[1]].tolist()
+        if (file_info.keys().__contains__("filename")):
+            measurements.append({
+            "values": values,
+            "date": file_info["filename"]
+        })
+        else :
+            measurements.append({
+            "values": values,
+            "date": file_info["Strahlernummer"]
+        })
+
+
+        
+
+        
+
+        response_data = {
+            "wellNumber": dpt.merged_data[dpt.merged_data.columns.tolist()[0]].tolist(),
+            "values": measurements,
+            "black": dpt.getIntensity(),
+            "blackWellNumber": dpt.getwavelength(),
+            "blackName": dpt.getName(),
+            "fileData": file_info
+        }
+
+        return Response(response_data, status=200)
+    return Response(serializer.errors, status=400)
+@api_view(['POST'])
+def SaveDptInDatabase(request):
+    serializer = DptSaveSerializer(data=request.data)
+    if serializer.is_valid():
+        file = serializer.validated_data['file']
+        
+        # Extract information from filename
+        file_info = extract_info_from_filename(file.name)
+        
+        # Read the original file content and replace commas with dots
+        file_content = file.read().decode('utf-8')
+        modified_content = file_content.replace(',', '.')
+        
+        # Create a temporary file with the modified content
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            temp_file.write(modified_content.encode('utf-8'))
+            temp_file_path = temp_file.name
+        
+        # Retrieve other fields from the serializer
+        datum = serializer.validated_data['datum']
+        strahlertyp = serializer.validated_data['strahlertyp']
+        strahlernummer = serializer.validated_data['strahlernummer']
+        volt = serializer.validated_data['volt']
+        leistung = serializer.validated_data['leistung']
+        current = serializer.validated_data['current']
+
+        # Print the fields for debugging
+        print("Datum:", datum)
+        print("Strahlertyp:", strahlertyp)
+        print("Strahlernummer:", strahlernummer)
+        print("Volt:", volt)
+        print("Leistung:", leistung)
+        print("Current:", current)
+
+        # Create a new measurement instance
+        new_measurement = Measurement(
+            date=datum,
+            type=strahlertyp,
+            set_power_W=leistung,
+            current_mA=current,
+            voltage_V=volt,
+            serial_number=strahlernummer,
+        )
+        new_measurement.save(using='mysql_db')
+        
+        # Pass the temporary file path to the import function
+        import_measurement_values_from_file(temp_file_path, new_measurement)
+        
+        response_data = {}
+
+        return Response(response_data, status=200)
+    return Response(serializer.errors, status=400)
+
+
+def extract_info_from_filename(filename):
+    # Define the regex pattern based on the filename format
+    pattern = r'^(?P<date>\d{4}\.\d{2}\.\d{2}_\d{2}\.\d{2}\.\d{2})_(?P<StrahlerTyp>[A-Z]+\d+R(?:-[A-Z]+)?|test\d+)_(?P<Power>\d+\.\d+)W_(?P<volt>\d+\.\d+)V_(?P<curr>\d+\.\d+)mA_(?P<Strahlernummer>[A-Z]+\d+|test\d+)(?:_.*)?\.0\.dpt$'
+    
+    match = re.match(pattern, filename.replace(",","."))
+    
+    if match:
+        # If match is found, extract information into a dictionary
+        info = match.groupdict()
+        
+        # Convert strings to appropriate types
+        info['Power'] = float(info['Power'])
+        info['volt'] = float(info['volt'])
+        info['curr'] = round(float(info['curr']) / 1000, 3)  # Convert mA to A and round to 3 decimal places
+        
+        return info
+    else:
+        # If no match is found, return the filename
+        return {"filename": filename}
 # Define an API endpoint to measure data from an HMP4040 device
 @api_view(['GET'])
 def hmp4040_measure(request):
@@ -97,6 +225,7 @@ def hmp4040_measure(request):
                              "value" :  hmp4040.channels_power.get(ch)    ,
                              "status" :hmp4040.get_channels_satus(ch)     
                              }
+        
             return JsonResponse(response_data, status=200)
         else:
             # Return an empty response if the device is not found
@@ -498,7 +627,7 @@ def scan(request):
             current_mA=current,
             voltage_V=voltage,
             serial_number=strahlernummer,
-            comment=comment,
+            
         )
 
         # Sleep for 6 seconds 
@@ -672,7 +801,35 @@ def import_measurement_values(file_path, measurement_instance):
     if measurement_values_list:
         MeasurementValues.objects.bulk_create(measurement_values_list)
 
+def import_measurement_values_from_file(file_path, measurement_instance):
+    measurement_values_list = []
 
+    with open(file_path, 'r') as file:
+        for line in file:
+            try:
+                # Replace comma with dot for float conversion
+                wavelength_str, amplitude_str = line.strip().split()
+                wavelength = float(wavelength_str.replace(',', '.'))
+                amplitude = float(amplitude_str.replace(',', '.'))
+
+                measurement_values_list.append(MeasurementValues(
+                    wavelength=wavelength,
+                    amplitude=amplitude,
+                    measurement=measurement_instance,
+                ))
+
+                # Save in batches, every 1000 records
+                if len(measurement_values_list) >= 1000:
+                    MeasurementValues.objects.bulk_create(measurement_values_list)
+                    measurement_values_list = []
+                    print(1000)
+            except ValueError:
+                # Skip lines that cannot be converted to float
+                continue
+
+    # Save any remaining records
+    if measurement_values_list:
+        MeasurementValues.objects.bulk_create(measurement_values_list)
 def get_windows_username():
     try:
         # Get the username from the environment variables

@@ -26,6 +26,7 @@ function FTIR() {
     soll_leistung: 0,
     comment: "",
   });
+  
 
   const materialColors = [
     "#064FF0", // Blue

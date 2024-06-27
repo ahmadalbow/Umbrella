@@ -20,4 +20,7 @@ urlpatterns = [
     path('set_volt/',views.set_volt),
     path('out_save_status/',views.out_save_status),
    path('get_dpt_data/',views.getDptData),
+    path('dpt_to_graph_values/',views.ConvertDptToGraphValues),
+    path('save_dpt_in_database/',views.SaveDptInDatabase),
+
 ]
